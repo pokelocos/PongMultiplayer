@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
 
-namespace Game1
+namespace MyEngine
 {
     class ImageManager
     {
@@ -14,8 +14,7 @@ namespace Game1
 
         public static void Register(string filename, Texture2D texture)
         {
-            textures.Add(filename,texture);
-            
+            textures.Add(filename,texture);            
         }
 
         public static Texture2D Get(String name)

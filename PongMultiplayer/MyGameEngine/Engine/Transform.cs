@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Game1
+namespace MyEngine
 {
+    [System.Serializable]
     public class Transform
     {
         private Vector3 position;
@@ -19,8 +19,8 @@ namespace Game1
         private Vector3 scale;
         public Vector3 Scale { get { return scale; } set { scale = value; } }
 
-        private GameObject gameObject;
-        private List<Transform> childs;
+        [NonSerialized] private GameObject gameObject;
+        [NonSerialized] private List<Transform> childs;
 
         public Transform(GameObject gameObject)
         {

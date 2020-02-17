@@ -1,4 +1,4 @@
-﻿namespace Game1
+﻿namespace MyEngine
 {
     public class Material
     {

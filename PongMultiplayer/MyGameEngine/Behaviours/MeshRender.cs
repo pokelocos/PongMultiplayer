@@ -1,7 +1,4 @@
-﻿using Game1.Engine;
-using Game1.Interfaces;
-using Game1.Utilities;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -9,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game1.Behaviours
+namespace MyEngine
 {
     class MeshRender : Behaviour , IRendereable
     {
@@ -33,7 +30,8 @@ namespace Game1.Behaviours
                 Matrix.CreateRotationX(gameObject.Transform.Rotation.X) * 
                 Matrix.CreateRotationY(gameObject.Transform.Rotation.Y) * 
                 Matrix.CreateRotationZ(gameObject.Transform.Rotation.Z);
-            Matrix Traslation = Matrix.CreateTranslation(gameObject.Transform.Position);
+
+            Matrix Traslation = Matrix.CreateTranslation(gameObject.Transform.Position.ToXna());
 
             modelMatrix = Rotation * Traslation;
         }
@@ -48,7 +46,7 @@ namespace Game1.Behaviours
                     effect.PreferPerPixelLighting = true;
 
                     Matrix world = matrixArray[mesh.ParentBone.Index] * modelMatrix;
-                    Matrix view = Matrix.CreateLookAt(camera.Transform.Position,camera.Target,camera.CameraUp);
+                    Matrix view = Matrix.CreateLookAt(camera.Transform.Position.ToXna(),camera.Target.ToXna(), camera.CameraUp.ToXna());
                     Matrix projection = Matrix.CreatePerspectiveFieldOfView(camera.Fov,camera.AspectRatio,camera.Near,camera.Far);
 
                     effect.World = world;

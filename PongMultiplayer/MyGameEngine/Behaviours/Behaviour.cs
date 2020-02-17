@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Game1
+namespace MyEngine
 {
+    [System.Serializable]
     public abstract class Behaviour
     {
         protected GameObject gameObject;
@@ -34,6 +35,8 @@ namespace Game1
         public virtual void StayCollision(Collider other) { }
         public virtual void EnterCollision(Collider other) { }
         public virtual void ExitCollision(Collider other) { }
+
+        public virtual void OnExiting() { }
 
         public bool IsActive()
         {

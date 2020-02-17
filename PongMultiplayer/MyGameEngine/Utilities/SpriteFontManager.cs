@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace MyEngine
 {
-    class ModelManager
+    class FontManager
     {
-        public static Dictionary<string, Model> models = new Dictionary<string, Model>();
+        public static Dictionary<string, SpriteFont> fonts = new Dictionary<string, SpriteFont>();
 
-        public static void Register(string filename, Model model)
+        public static void Register(string filename, SpriteFont font)
         {
-            models.Add(filename, model);
+            fonts.Add(filename, font);
         }
 
-        public static Model Get(String name)
+        public static SpriteFont Get(String name)
         {
             try
             {
-                return models[name];
+                return fonts[name];
             }
             catch (NullReferenceException e)
             {
@@ -29,3 +29,5 @@ namespace MyEngine
         }
     }
 }
+
+

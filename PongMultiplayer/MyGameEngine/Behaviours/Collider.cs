@@ -3,14 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace Game1
+namespace MyEngine
 {
     public abstract class Collider : Behaviour , IDrawable
     {
         private Vector2 offset;
         private Vector2 position;
 
-        private List<Collider> colliders= new List<Collider>();
+        private List<Collider> colliders = new List<Collider>();
 
         public Collider(GameObject gameObject, Vector2 offset, Vector2 position) : base(gameObject)
         {
@@ -28,13 +28,15 @@ namespace Game1
             if (exist && !colliders.Contains(c))
             {
                 colliders.Add(c);
-                foreach(Behaviour b in this.gameObject.Behaviours)
+                this.gameObject.EnterCollision(c);
+                foreach (Behaviour b in this.gameObject.Behaviours)
                 {
                     b.EnterCollision(c);
                 }
             }
             if(exist && colliders.Contains(c))
             {
+                this.gameObject.StayCollision(c);
                 foreach (Behaviour b in this.gameObject.Behaviours)
                 {
                     b.StayCollision(c);
@@ -43,6 +45,7 @@ namespace Game1
             if(!exist && colliders.Contains(c))
             {
                 colliders.Remove(c);
+                this.gameObject.ExitCollision(c);
                 foreach (Behaviour b in this.gameObject.Behaviours)
                 {
                     b.ExitCollision(c);
@@ -75,7 +78,6 @@ namespace Game1
                     sb.Draw(ImageManager.textures["square"], new Rectangle(x, y, (int)size.X, (int)size.Y), new Color(255,255,255,20));
                 }
             }
-
 
             public override void IsCollider(Collider other)
             {                

@@ -5,17 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game1
+namespace MyEngine
 {
     public class Scene
     {
+        public bool isInit = false;
+
         protected List<GameObject> gameObjects = new List<GameObject>();
 
+        public string name;
         protected bool active;
 
-        public Scene(bool active)
+        public Scene(string name, bool active = false)
         {
+            this.name = name;
             this.active = active;
+
         }
 
         public void Init()
@@ -34,12 +39,11 @@ namespace Game1
                 {
                     go.Start();
                 }
-            }            
+            }
         }
 
-        public void Actualize()
+        public virtual void Actualize()
         {
-            
             foreach (GameObject go in gameObjects)
             {
                 if (go.IsActive())
@@ -53,7 +57,7 @@ namespace Game1
         {
             foreach (GameObject go in gameObjects)
             {
-                if(go.IsActive())
+                if (go.IsActive())
                 {
                     go.Draw(sb);
                 }
@@ -68,6 +72,14 @@ namespace Game1
         public void SetActive(bool active)
         {
             this.active = active;
+        }
+
+        internal void OnExiting()
+        {
+            foreach (GameObject go in gameObjects)
+            {
+                go.OnExiting();
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game1
+namespace MyEngine
 {
     class SpriteRender : Behaviour , IDrawable
     {
@@ -25,14 +25,18 @@ namespace Game1
             this.offset = Vector2.Zero;
         }
 
+        public void SetImage(Texture2D texture)
+        {
+            this.texture = texture;
+        }
+
         public void Draw(SpriteBatch sb)
         {
             int x = (int)(gameObject.Transform.Position.X + offset.X);
             int y = (int)(gameObject.Transform.Position.Y + offset.Y);
 
             Vector2 center = new Vector2((texture.Width/2),(texture.Height/2));
-            sb.Draw(texture, new Rectangle(x + (int)(size.X/2),y + (int)(size.Y/2), (int)size.X, (int)size.Y), null, color, MathHelper.ToRadians(gameObject.Transform.Rotation2D), center, SpriteEffects.None,0);
-
+            sb.Draw(texture, new Rectangle(x + (int)(size.X / 2), y + (int)(size.Y / 2), (int)size.X, (int)size.Y), null, color, MathHelper.ToRadians(gameObject.Transform.Rotation2D), center.ToXna(), SpriteEffects.None, 0);
         }
     }
 }

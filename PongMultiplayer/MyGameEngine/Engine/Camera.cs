@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game1.Engine
+namespace MyEngine
 {
     class Camera : GameObject
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game1
+namespace MyEngine
 {
 #if WINDOWS || LINUX
     /// <summary>
@@ -14,7 +14,9 @@ namespace Game1
         [STAThread]
         static void Main()
         {
-            using (var game = new EngineGame())
+            var engine = new EngineGame();
+            SceneManager.SetEngine(engine);
+            using (var game = engine)
             {
                 game.Run();
             }

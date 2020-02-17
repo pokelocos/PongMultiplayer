@@ -1,12 +1,11 @@
-﻿using Game1.Engine;
-using Game1.Interfaces;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Game1
+namespace MyEngine
 {
+    [System.Serializable]
     public class GameObject 
     {
         protected string name;
@@ -37,6 +36,9 @@ namespace Game1
             return null;
         }
 
+        public virtual void StayCollision(Collider other) { }
+        public virtual void EnterCollision(Collider other) { }
+        public virtual void ExitCollision(Collider other) { }
 
         public void AddBehaviour(Behaviour behaviour)
         {
@@ -67,7 +69,7 @@ namespace Game1
             }
         }
 
-        public void Actualize()
+        public virtual void Actualize()
         {
             foreach (Behaviour b in behaviours)
             {
@@ -75,6 +77,14 @@ namespace Game1
                 {
                     b.Actualize();
                 }                
+            }
+        }
+
+        internal void OnExiting()
+        {
+            foreach (Behaviour b in behaviours)
+            {
+                b.OnExiting();
             }
         }
 
