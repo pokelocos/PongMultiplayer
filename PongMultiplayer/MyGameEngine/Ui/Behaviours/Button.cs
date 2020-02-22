@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyEngine
 {
-    class Button : Behaviour
+    class Button : Behaviour , ISelectable
     {
         public delegate void Event();
 
@@ -17,6 +17,7 @@ namespace MyEngine
         public Button(GameObject gameObject, Vector2 box) : base(gameObject)
         {
             this.box = box;
+            InputManager.selectables.Add(this);
         }
 
         public override void Update()
@@ -29,6 +30,10 @@ namespace MyEngine
             }
         }
 
+        public Rectangle GetRect()
+        {
+            return new Rectangle((int)gameObject.Transform.Position.X, (int)gameObject.Transform.Position.Y, (int)box.X, (int)box.Y);
+        }
 
         public Event Action;
     }

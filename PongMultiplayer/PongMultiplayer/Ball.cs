@@ -17,9 +17,10 @@ namespace PongMultiplayer
         public Ball(string name,int idNetwork,float gapMS,float speed,float acceleration,Texture2D texture,Vector2 size) : base(name)
         {
             AddBehaviour(new SpriteRender(this,texture,size));
-            AddBehaviour(new Collider.Rect(this, size / 2f, size));
             AddBehaviour(new TransformNetwork(this, gapMS, idNetwork));
-           
+
+            if(MultiplayerManager.isServer)
+                AddBehaviour(new Collider.Rect(this, size / 2f, size));
 
             this.speed = speed;
             this.aceleration = acceleration;
@@ -29,13 +30,15 @@ namespace PongMultiplayer
         public override void Actualize()
         {
             base.Actualize();
-
             this.transform.Translate(direction * speed * Time.DeltaTime()); 
 
         }
 
         public override void EnterCollision(Collider other)
         {
+            if (!MultiplayerManager.isServer) // por si acaso
+                return;
+
             if (other.GameObject.GetName().Equals("Top") || other.GameObject.GetName().Equals("Bot"))
             {
                 direction = Vector3.Normalize(new Vector3(direction.X, -direction.Y,0));

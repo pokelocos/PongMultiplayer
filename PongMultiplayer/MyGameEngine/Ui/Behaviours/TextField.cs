@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyEngine
 {
-    class TextField : Behaviour, IDrawable
+    class TextField : Behaviour, IDrawable ,ISelectable
     {
         private static TextField Focus;
 
@@ -32,6 +32,8 @@ namespace MyEngine
             this.exampleText = example;
             this.text = text;
             this.size = size;
+
+            InputManager.selectables.Add(this);
         }
 
         public override void Update()

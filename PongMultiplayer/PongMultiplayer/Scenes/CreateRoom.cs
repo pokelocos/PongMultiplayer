@@ -21,9 +21,8 @@ namespace PongMultiplayer
             {
                 try
                 {
-                    MultiplayerManager.StartServer(8000);
+                    MultiplayerManager.StartServer(6000);
                     SceneManager.LoadScene(new GameScene("GameScene"));
-                    SceneManager.UnloadScene("CreateRoom");
                 }
                 catch
                 {

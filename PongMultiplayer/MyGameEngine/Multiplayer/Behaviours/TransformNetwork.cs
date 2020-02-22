@@ -19,7 +19,7 @@ namespace MyEngine
             MultiplayerManager.SuscribeNetworkBehaviour(this);
         }
       
-        protected override void UpdateNetwork()
+        public override void UpdateNetwork()
         {
             DataNetwork dataNetwork = new DataNetwork(networkID,MultiplayerManager.clientID,target);
 

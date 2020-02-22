@@ -41,44 +41,46 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Ball.cs" />
-    <Compile Include="Controller.cs" />
-    <Compile Include="MyGameEngine\Behaviours\Text.cs" />
-    <Compile Include="MyGameEngine\Behaviours\TextField.cs" />
-    <Compile Include="MyGameEngine\Engine\Vector2.cs" />
-    <Compile Include="MyGameEngine\Engine\Vector3.cs" />
-    <Compile Include="MyGameEngine\Engine\SceneManager.cs" />
-    <Compile Include="MyGameEngine\Multiplayer\BehaviourNetwork.cs" />
+    <Compile Include="MyGameEngine\Multiplayer\Behaviours\SpriteRenderNetwork.cs" />
+    <Compile Include="PongMultiplayer\Ball.cs" />
+    <Compile Include="PongMultiplayer\Clock.cs" />
+    <Compile Include="PongMultiplayer\Controller.cs" />
+    <Compile Include="MyGameEngine\Ui\Behaviours\Text.cs" />
+    <Compile Include="MyGameEngine\Ui\Behaviours\TextField.cs" />
+    <Compile Include="MyGameEngine\Core\Vector2.cs" />
+    <Compile Include="MyGameEngine\Core\Vector3.cs" />
+    <Compile Include="MyGameEngine\Core\SceneManager.cs" />
+    <Compile Include="MyGameEngine\Multiplayer\Behaviours\BehaviourNetwork.cs" />
     <Compile Include="MyGameEngine\Multiplayer\DataNetwork.cs" />
-    <Compile Include="MyGameEngine\Multiplayer\TransformNetwork.cs" />
+    <Compile Include="MyGameEngine\Multiplayer\Behaviours\TransformNetwork.cs" />
     <Compile Include="MyGameEngine\Multiplayer\MultiplayerManager.cs" />
     <Compile Include="MyGameEngine\Multiplayer\UtilitiesMultiplayer.cs" />
-    <Compile Include="MyGameEngine\Prefabs\ButtonPrefab.cs" />
-    <Compile Include="MyGameEngine\Prefabs\MultiplayerShowData.cs" />
-    <Compile Include="MyGameEngine\Prefabs\InputFieldPrefab.cs" />
+    <Compile Include="MyGameEngine\Ui\Prefabs\ButtonPrefab.cs" />
+    <Compile Include="MyGameEngine\Multiplayer\Prefabs\MultiplayerShowData.cs" />
+    <Compile Include="MyGameEngine\Ui\Prefabs\InputFieldPrefab.cs" />
     <Compile Include="MyGameEngine\Utilities\SpriteFontManager.cs" />
-    <Compile Include="Paddle.cs" />
-    <Compile Include="Specifics\GameScene.cs" />
-    <Compile Include="Specifics\JoinRoom.cs" />
-    <Compile Include="Specifics\MainMenu.cs" />
-    <Compile Include="MyGameEngine\Behaviours\Behaviour.cs" />
-    <Compile Include="MyGameEngine\Behaviours\Button.cs" />
-    <Compile Include="MyGameEngine\Behaviours\Collider.cs" />
-    <Compile Include="MyGameEngine\Behaviours\Material.cs" />
-    <Compile Include="MyGameEngine\Behaviours\MeshRender.cs" />
-    <Compile Include="MyGameEngine\Behaviours\Rigidbody.cs" />
-    <Compile Include="MyGameEngine\Behaviours\Rigidbody2D.cs" />
-    <Compile Include="MyGameEngine\Behaviours\SpriteRender.cs" />
-    <Compile Include="Specifics\CreateRoom.cs" />
-    <Compile Include="MyGameEngine\Engine\Camera.cs" />
-    <Compile Include="MyGameEngine\Engine\EngineGame.cs" />
-    <Compile Include="MyGameEngine\Engine\GameObject.cs" />
-    <Compile Include="MyGameEngine\Engine\Physics.cs" />
-    <Compile Include="MyGameEngine\Engine\Program.cs" />
-    <Compile Include="MyGameEngine\Engine\Scene.cs" />
-    <Compile Include="MyGameEngine\Engine\Transform.cs" />
-    <Compile Include="MyGameEngine\Interfaces\IDrawable.cs" />
-    <Compile Include="MyGameEngine\Interfaces\IRendereable.cs" />
+    <Compile Include="PongMultiplayer\Paddle.cs" />
+    <Compile Include="PongMultiplayer\Scenes\GameScene.cs" />
+    <Compile Include="PongMultiplayer\Scenes\JoinRoom.cs" />
+    <Compile Include="PongMultiplayer\Scenes\MainMenu.cs" />
+    <Compile Include="MyGameEngine\Core\Behaviours\Behaviour.cs" />
+    <Compile Include="MyGameEngine\Ui\Behaviours\Button.cs" />
+    <Compile Include="MyGameEngine\Physics\Behaviours\Collider.cs" />
+    <Compile Include="MyGameEngine\Physics\Material.cs" />
+    <Compile Include="MyGameEngine\Ui\Behaviours\MeshRender.cs" />
+    <Compile Include="MyGameEngine\Physics\Behaviours\Rigidbody.cs" />
+    <Compile Include="MyGameEngine\Physics\Behaviours\Rigidbody2D.cs" />
+    <Compile Include="MyGameEngine\Core\Behaviours\SpriteRender.cs" />
+    <Compile Include="PongMultiplayer\Scenes\CreateRoom.cs" />
+    <Compile Include="MyGameEngine\Core\Camera.cs" />
+    <Compile Include="MyGameEngine\Core\EngineGame.cs" />
+    <Compile Include="MyGameEngine\Core\GameObject.cs" />
+    <Compile Include="MyGameEngine\Physics\Physics.cs" />
+    <Compile Include="MyGameEngine\Core\Program.cs" />
+    <Compile Include="MyGameEngine\Core\Scene.cs" />
+    <Compile Include="MyGameEngine\Core\Behaviours\Transform.cs" />
+    <Compile Include="MyGameEngine\Core\Interfaces\IDrawable.cs" />
+    <Compile Include="MyGameEngine\Core\Interfaces\IRendereable.cs" />
     <Compile Include="MyGameEngine\Utilities\BoundingBox.cs" />
     <Compile Include="MyGameEngine\Utilities\Globals.cs" />
     <Compile Include="MyGameEngine\Utilities\ImageManager.cs" />
@@ -106,6 +108,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -13,6 +13,7 @@ namespace MyEngine
         public int networkID;
 
         public int controllerID = 0;
+        public bool isUpdatable = true;
 
         public BehaviourNetwork(GameObject gameObject, float gapMS, int networkID) : base(gameObject)
         {
@@ -24,7 +25,7 @@ namespace MyEngine
         public override void Update()
         {
             base.Update();
-            if (MultiplayerManager.Client != null && MultiplayerManager.Client.Connected && controllerID == MultiplayerManager.clientID)
+            if (isUpdatable && MultiplayerManager.Client != null && MultiplayerManager.Client.Connected && controllerID == MultiplayerManager.clientID)
             {
                 if (gapMS / 1000f < currentTime)
                 {
@@ -35,7 +36,7 @@ namespace MyEngine
             }
         }
 
-        protected abstract void UpdateNetwork();
+        public abstract void UpdateNetwork();
         public abstract void ReciveData(DataNetwork data);
     }
 }

@@ -22,6 +22,10 @@ namespace MyEngine
 
         public static int ClientAmount = 0;
 
+        public delegate void ConectionEvent();
+        public static ConectionEvent OnConnect;
+        public static ConectionEvent OnDiscconect;
+
         private static TcpListener listener;
         private static Thread searchClient;
         private static Thread reciveData;
@@ -37,13 +41,43 @@ namespace MyEngine
         //behaviours
         public static List<BehaviourNetwork> behaviours = new List<BehaviourNetwork>();
 
+        public static void Command(DataNetwork data)
+        {
+            switch ((BasicCommand)data.obj)
+            {
+                case BasicCommand.NewConnection:
+                    if (isServer)
+                    {
+                        ClientAmount++;
+                        var msg = UtilitiesMultiplayer.ObjectToByteArray(new DataNetwork(-1, ClientAmount, BasicCommand.NewConnection));
+                        Send(msg);
+                    }
+                    else
+                    {
+                        clientID = data.senderID;
+                    }
+                    break;
+
+                case BasicCommand.Desconection:
+                    if (isServer)
+                    {
+                        ClientAmount--;
+                        var msg = UtilitiesMultiplayer.ObjectToByteArray(new DataNetwork(-1, ClientAmount, BasicCommand.ServerDesconection));
+                        Send(msg);
+                    }
+                    break;
+
+            }
+
+        } // esto debiese enstar en otra clase
+
         public static void SuscribeNetworkBehaviour(BehaviourNetwork bn)
         {
-            if(!behaviours.Contains(bn))
+            if (!behaviours.Contains(bn))
             {
                 behaviours.Add(bn);
             }
-        }
+        } // esto probablemente tambien
 
         /// <summary>
         /// Send message.
@@ -76,9 +110,10 @@ namespace MyEngine
         {
             MultiplayerManager.port = port;
             isServer = true;
-
+            
             searchClient = new Thread(SearchClient_Thread);
             searchClient.Start();
+           
         }
 
         /// <summary>
@@ -87,11 +122,13 @@ namespace MyEngine
         /// </summary>
         private static void SearchClient_Thread()
         {
+            Console.WriteLine("A");
             addres = IPAddress.Any;
             addres = UtilitiesMultiplayer.GetIPs()[0];
            
             listener = new TcpListener(addres, port);
             listener.Start();
+            
             try
             {
                 client = listener.AcceptTcpClient(); // <- wainting
@@ -143,36 +180,6 @@ namespace MyEngine
             }
         }
 
-        public static void Command(DataNetwork data)
-        {
-            switch((BasicCommand)data.obj)
-            {
-                case BasicCommand.NewConnection:
-                    if(isServer)
-                    {
-                        ClientAmount++;
-                        var msg = UtilitiesMultiplayer.ObjectToByteArray(new DataNetwork(-1, ClientAmount, BasicCommand.NewConnection));
-                        Send(msg);
-                    }
-                    else
-                    {
-                        clientID = data.senderID;
-                    }
-                    break;
-
-                case BasicCommand.Desconection:
-                    if (isServer)
-                    {
-                        ClientAmount--;
-                        var msg = UtilitiesMultiplayer.ObjectToByteArray(new DataNetwork(-1, ClientAmount, BasicCommand.ServerDesconection));
-                        Send(msg);
-                    }
-                    break;
-
-            }
-
-        }
-
         /// <summary>
         /// Connect to an existing server.
         /// </summary>
@@ -188,14 +195,16 @@ namespace MyEngine
 
                 if (client.Connected)
                 {
-                    //isClient = true;
-
-                    DataNetwork dataNetwork = new DataNetwork(-1, 0, BasicCommand.NewConnection);
-                    var msg = UtilitiesMultiplayer.ObjectToByteArray(dataNetwork);
+                    //Envio mensaje de coneccion
+                    var msg = UtilitiesMultiplayer.ObjectToByteArray(new DataNetwork(-1, 0, BasicCommand.NewConnection));
                     client.Client.Send(msg);
                    
+                    //Inicio Nuevo thread para recivir informacion
                     reciveData = new Thread(ReciveData_Thread);
                     reciveData.Start();
+
+                    //Llamo al evento de coneccion
+                    OnConnect?.Invoke();
                 }
             }
             catch 
@@ -206,17 +215,23 @@ namespace MyEngine
 
         public static void Disconect()
         {
+            //Envio mensaje de desconeccion
             var msg = UtilitiesMultiplayer.ObjectToByteArray(new DataNetwork(-1,clientID,BasicCommand.Desconection));
             Send(msg);
 
+            //Detengo las posibles corrutinas abiertas
             listener?.Stop();
             reciveData?.Abort();
 
+            //Reinicio todos los valores al base
             addres = null;
             port = -1;
             isServer = false;
             clientID = -1;
             ClientAmount = 0;
+
+            //Llamo al evento de desconeccion
+            OnDiscconect?.Invoke();
         }
     }
 

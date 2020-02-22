@@ -93,6 +93,7 @@ namespace MyEngine
             }
 
             Physics.Update();
+            InputManager.Update();
 
             foreach (Scene e in scenes)
             {
