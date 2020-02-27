@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyEngine
 {
+    [System.Serializable]
     public class Vector2
     {
         public float X;

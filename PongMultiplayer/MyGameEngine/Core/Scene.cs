@@ -11,7 +11,7 @@ namespace MyEngine
     {
         public bool isInit = false;
 
-        protected List<GameObject> gameObjects = new List<GameObject>();
+        internal List<GameObject> gameObjects = new List<GameObject>();
 
         public string name;
         protected bool active;
@@ -78,7 +78,7 @@ namespace MyEngine
         {
             foreach (GameObject go in gameObjects)
             {
-                go.OnExiting();
+                go.OnExit();
             }
         }
     }

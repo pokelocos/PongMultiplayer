@@ -14,7 +14,7 @@ namespace MyEngine
         public MultiplayerShowData(string name) : base(name)
         {
             this.texts = new List<Text>();
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 7; i++)
             {
                 Text text = new Text(this, new Vector2(0, i * 16), FontManager.Get("MainFont"), Color.Black);
                 texts.Add(text);
@@ -27,12 +27,13 @@ namespace MyEngine
         {
             base.Actualize();
 
-            texts[0].value = "Is connected: " + MultiplayerManager.Client?.Connected;
-            texts[1].value = "Is server: " + MultiplayerManager.isServer;
-            texts[2].value = "Client amount: " + MultiplayerManager.ClientAmount;
-            texts[3].value = "Addres: "+ MultiplayerManager.addres?.ToString();
-            texts[4].value = "Port: " + MultiplayerManager.port.ToString();
-            texts[5].value = "Client: " + MultiplayerManager.Client?.ToString();
+            texts[0].value = "Is connected: " + NetworkManager.Client?.Connected;
+            texts[1].value = "Is server: " + NetworkManager.isServer;
+            texts[2].value = "Client amount: " + NetworkManager.ClientAmount;
+            texts[3].value = "Addres: "+ NetworkManager.addres?.ToString();
+            texts[4].value = "Port: " + NetworkManager.port.ToString();
+            texts[5].value = "Client: " + NetworkManager.Client?.ToString();
+            texts[6].value = "ClientID: " + NetworkManager.clientID;
         }
     }
 }

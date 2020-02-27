@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace MyEngine
+namespace MyEngine.Network.Behaviours
 {
     public abstract class BehaviourNetwork : Behaviour
     {
@@ -14,6 +15,8 @@ namespace MyEngine
 
         public int controllerID = 0;
         public bool isUpdatable = true;
+
+        public Mutex mutex = new Mutex();
 
         public BehaviourNetwork(GameObject gameObject, float gapMS, int networkID) : base(gameObject)
         {
@@ -25,7 +28,7 @@ namespace MyEngine
         public override void Update()
         {
             base.Update();
-            if (isUpdatable && MultiplayerManager.Client != null && MultiplayerManager.Client.Connected && controllerID == MultiplayerManager.clientID)
+            if (isUpdatable && NetworkManager.Client != null && NetworkManager.Client.Connected && controllerID == NetworkManager.clientID)
             {
                 if (gapMS / 1000f < currentTime)
                 {

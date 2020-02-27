@@ -41,7 +41,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MyGameEngine\Multiplayer\Behaviours\SpriteRenderNetwork.cs" />
+    <Compile Include="MyGameEngine\Core\TimeLine.cs" />
+    <Compile Include="MyGameEngine\Core\Animator.cs" />
+    <Compile Include="MyGameEngine\Network\Behaviours\SpriteRenderNetwork.cs" />
+    <Compile Include="MyGameEngine\Core\InputManager.cs" />
+    <Compile Include="MyGameEngine\Core\Interfaces\ISelectable.cs" />
     <Compile Include="PongMultiplayer\Ball.cs" />
     <Compile Include="PongMultiplayer\Clock.cs" />
     <Compile Include="PongMultiplayer\Controller.cs" />
@@ -50,15 +54,16 @@
     <Compile Include="MyGameEngine\Core\Vector2.cs" />
     <Compile Include="MyGameEngine\Core\Vector3.cs" />
     <Compile Include="MyGameEngine\Core\SceneManager.cs" />
-    <Compile Include="MyGameEngine\Multiplayer\Behaviours\BehaviourNetwork.cs" />
-    <Compile Include="MyGameEngine\Multiplayer\DataNetwork.cs" />
-    <Compile Include="MyGameEngine\Multiplayer\Behaviours\TransformNetwork.cs" />
-    <Compile Include="MyGameEngine\Multiplayer\MultiplayerManager.cs" />
-    <Compile Include="MyGameEngine\Multiplayer\UtilitiesMultiplayer.cs" />
+    <Compile Include="MyGameEngine\Network\Behaviours\BehaviourNetwork.cs" />
+    <Compile Include="MyGameEngine\Network\DataNetwork.cs" />
+    <Compile Include="MyGameEngine\Network\Behaviours\TransformNetwork.cs" />
+    <Compile Include="MyGameEngine\Network\NetworkManager.cs" />
+    <Compile Include="MyGameEngine\Network\UtilitiesNetwork.cs" />
     <Compile Include="MyGameEngine\Ui\Prefabs\ButtonPrefab.cs" />
-    <Compile Include="MyGameEngine\Multiplayer\Prefabs\MultiplayerShowData.cs" />
+    <Compile Include="MyGameEngine\Network\Prefabs\MultiplayerShowData.cs" />
     <Compile Include="MyGameEngine\Ui\Prefabs\InputFieldPrefab.cs" />
     <Compile Include="MyGameEngine\Utilities\SpriteFontManager.cs" />
+    <Compile Include="PongMultiplayer\lifeSlot.cs" />
     <Compile Include="PongMultiplayer\Paddle.cs" />
     <Compile Include="PongMultiplayer\Scenes\GameScene.cs" />
     <Compile Include="PongMultiplayer\Scenes\JoinRoom.cs" />
@@ -86,6 +91,8 @@
     <Compile Include="MyGameEngine\Utilities\ImageManager.cs" />
     <Compile Include="MyGameEngine\Utilities\ModelManager.cs" />
     <Compile Include="MyGameEngine\Utilities\Time.cs" />
+    <Compile Include="PongMultiplayer\Scenes\OtherMatch.cs" />
+    <Compile Include="PongMultiplayer\TriggerGoal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

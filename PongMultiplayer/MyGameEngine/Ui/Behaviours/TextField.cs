@@ -9,12 +9,9 @@ using System.Threading.Tasks;
 
 namespace MyEngine
 {
-    class TextField : Behaviour, IDrawable ,ISelectable
+    class TextField : Behaviour, IDrawable , ISelectable
     {
-        private static TextField Focus;
-
-        public delegate void Event();
-
+        public Vector2 offset = Vector2.Zero;
         public string exampleText;
         public string text;
         private Vector2 box;
@@ -39,13 +36,13 @@ namespace MyEngine
         public override void Update()
         {
             base.Update();
-            Rectangle rect = new Rectangle((int)gameObject.Transform.Position.X, (int)gameObject.Transform.Position.Y, (int)box.X, (int)box.Y);
-            if (rect.Contains(Mouse.GetState().Position) && Mouse.GetState().LeftButton.Equals(ButtonState.Pressed))
-            {
-                TextField.Focus = this;
-            }
+            //Rectangle rect = new Rectangle((int)gameObject.Transform.Position.X, (int)gameObject.Transform.Position.Y, (int)box.X, (int)box.Y);
+            //if (rect.Contains(Mouse.GetState().Position) && Mouse.GetState().LeftButton.Equals(ButtonState.Pressed))
+            //{
+            //    TextField.Focus = this;
+            //}
 
-            if (Focus != this)
+            if (InputManager.focus != this)
                 return;
 
             List<Keys> keys = new List<Keys>();
@@ -63,13 +60,13 @@ namespace MyEngine
                 {
                     if (k.Equals(Keys.Back))
                     {
-                        if(Focus.text.Length > 0)
-                            Focus.text = Focus.text.Remove(Focus.text.Length - 1);
+                        if(this.text.Length > 0)
+                            this.text = this.text.Remove(this.text.Length - 1);
                         continue;
                     }
 
-                    if(Focus.text.Length < size)
-                        Focus.text += GetStingKey(k);
+                    if(this.text.Length < size)
+                        this.text += GetStingKey(k);
                 }
             }
 
@@ -81,23 +78,21 @@ namespace MyEngine
             int x = (int)(gameObject.Transform.Position.X );
             int y = (int)(gameObject.Transform.Position.Y );
 
-            Vector2 center = new Vector2( gameObject.Transform.Position.X, gameObject.Transform.Position.Y);
-            Rectangle rect = new Rectangle((int)gameObject.Transform.Position.X, (int)gameObject.Transform.Position.Y, (int)box.X, (int)box.Y);
-            Vector2 vec = new Vector2(gameObject.Transform.Position.X, gameObject.Transform.Position.Y);
+            Vector2 vec = new Vector2(gameObject.Transform.Position.X, gameObject.Transform.Position.Y) + offset;
 
             if (text.Equals(""))
             {
-                if(Focus == this)
+                if(InputManager.focus == this)
                 {
 
                     if (time < .5f)
                     {
-                        sb.DrawString(font, "|", vec.ToXna(), Color.Black);
+                        sb.DrawString(font, "|", vec.ToXna(), Color.White);
 
                     }
                     else
                     {
-                        sb.DrawString(font, "", vec.ToXna(), Color.Black);
+                        sb.DrawString(font, "", vec.ToXna(), Color.White);
 
                     }
                     if (time > 1f)
@@ -115,15 +110,15 @@ namespace MyEngine
             }
             else
             {
-                if (Focus == this)
+                if (InputManager.focus == this)
                 {
                     if (time < .5f)
                     {
-                        sb.DrawString(font, text + "|", vec.ToXna(), Color.Black);
+                        sb.DrawString(font, text + "|", vec.ToXna(), Color.White);
                     }
                     else
                     {
-                        sb.DrawString(font, text, vec.ToXna(), Color.Black);
+                        sb.DrawString(font, text, vec.ToXna(), Color.White);
                     }
                     if(time > 1f)
                     {
@@ -134,7 +129,7 @@ namespace MyEngine
                 }
                 else
                 {
-                    sb.DrawString(font, text, vec.ToXna(), Color.Black);
+                    sb.DrawString(font, text, vec.ToXna(), Color.White);
                 }
                
             }
@@ -172,5 +167,14 @@ namespace MyEngine
             }
         }
 
+        public Rectangle GetRect()
+        {
+            return new Rectangle((int)gameObject.Transform.Position.X, (int)gameObject.Transform.Position.Y, (int)box.X, (int)box.Y);
+        }
+
+        public void OnClickDown() { }
+        public void OnClickUp() { }
+        public void OnMouseEnter() { }
+        public void OnMouseOut() { }
     }
 }

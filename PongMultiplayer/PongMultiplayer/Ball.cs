@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using MyEngine;
+using MyEngine.Network.Behaviours;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,16 @@ namespace PongMultiplayer
 {
     class Ball : GameObject
     {
-        private float speed;
-        private float aceleration;
-        private Vector3 direction;
+        public float speed;
+        public float aceleration;
+        public Vector3 direction;
 
-        public Ball(string name,int idNetwork,float gapMS,float speed,float acceleration,Texture2D texture,Vector2 size) : base(name)
+        public Ball(string name,int idNetwork,float gapMS,float speed,float acceleration,string texture,Vector2 size) : base(name)
         {
             AddBehaviour(new SpriteRender(this,texture,size));
             AddBehaviour(new TransformNetwork(this, gapMS, idNetwork));
 
-            if(MultiplayerManager.isServer)
+            if(NetworkManager.isServer)
                 AddBehaviour(new Collider.Rect(this, size / 2f, size));
 
             this.speed = speed;
@@ -36,7 +37,7 @@ namespace PongMultiplayer
 
         public override void EnterCollision(Collider other)
         {
-            if (!MultiplayerManager.isServer) // por si acaso
+            if (!NetworkManager.isServer) // por si acaso
                 return;
 
             if (other.GameObject.GetName().Equals("Top") || other.GameObject.GetName().Equals("Bot"))

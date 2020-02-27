@@ -10,6 +10,8 @@ namespace PongMultiplayer
 {
     class Controller : Behaviour
     {
+        public bool disable = false;
+
         public float speed;
 
         public Controller(GameObject gameObject,float speed) : base(gameObject)
@@ -20,6 +22,10 @@ namespace PongMultiplayer
         public override void Update()
         {
             base.Update();
+
+            if(disable)
+                return;
+
             var state = Keyboard.GetState();
             if (state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up))
             {

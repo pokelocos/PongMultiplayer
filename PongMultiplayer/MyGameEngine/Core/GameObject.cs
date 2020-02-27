@@ -80,7 +80,7 @@ namespace MyEngine
             }
         }
 
-        internal void OnExiting()
+        internal void OnExit()
         {
             foreach (Behaviour b in behaviours)
             {

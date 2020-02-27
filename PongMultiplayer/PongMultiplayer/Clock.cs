@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using MyEngine;
-using MyEngine.Multiplayer.Behaviours;
+using MyEngine.Network.Behaviours;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,96 +11,39 @@ namespace PongMultiplayer
 {
     class Clock : GameObject
     {
-        public Texture2D[] sprites;
+        public Vector2 size;
 
-        public delegate void TimeEvent(float time);
-
-        public TimeEvent OnStartClock;
-        public TimeEvent OnEverySecond;
-        public TimeEvent OnEndClock;
-
-        private float totalTime = 0;
-        private float time = 0;
-
-        public bool isRunning = false;
-
-        private SpriteRender spriteRender;
-        private SpriteRenderNetwork network;
-
-        public Clock(string name, int networkID) : base(name)
+        public Clock(string name, Vector2 size, int networkID) : base(name)
         {
-            sprites[0] = ImageManager.Get("3"); // dejo esto aqui apesar de que no sirva para acordarme que esto podria ser una animacion <3 :C
-            sprites[1] = ImageManager.Get("2");
-            sprites[2] = ImageManager.Get("1");
+            this.size = size;
+            AddBehaviour(new SpriteRender(this,"3", size));
 
-            spriteRender = new SpriteRender(this, ImageManager.Get("3"), new Vector2(100, 100));
-            AddBehaviour(spriteRender);
-            network = new SpriteRenderNetwork(this, 100, 0);
+            var network = new SpriteRenderNetwork(this, 100, networkID);
             network.isUpdatable = false;
             AddBehaviour(network);
-            OnEverySecond += CancerMethod;
-        }
 
-        public override void Actualize()
-        {
-            base.Actualize();
-
-            if(isRunning)
+            if(NetworkManager.isServer)
             {
-                if (totalTime == 0)
-                {
-                    OnStartClock.Invoke(0f);
-                }
+                Animator animator = new Animator(this);
 
-                if (time >= 1)
-                {
-                    OnStartClock.Invoke(totalTime);
-                    time = 0;
-                }
-                time += Time.DeltaTime();
-                totalTime += Time.DeltaTime();
+                List<Tuple<string, float>> anims = new List<Tuple<string, float>>();
+                anims.Add(new Tuple<string, float>("3", 0f));
+                anims.Add(new Tuple<string, float>("2", 1f));
+                anims.Add(new Tuple<string, float>("1", 2f));
+                anims.Add(new Tuple<string, float>("Blank", 3f));
+                var spriteKeys = new TimeLine<string>(anims, 4f);
+                animator.Animations.Add(spriteKeys);
+
+                List<Tuple<Action, float>> events = new List<Tuple<Action, float>>();
+                events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); }, 0f));
+                events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); }, 1f));
+                events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); }, 2f));
+                events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); }, 3f));
+                var actionKeys = new TimeLine<Action>(events, 4f);
+                animator.Events.Add(actionKeys);
+
+                AddBehaviour(animator);
             }
-        }
-
-        public void CancerMethod(float seg)
-        {
-            switch((int)seg)
-            {
-                case 0:
-                    spriteRender.Sprite = (ImageManager.Get("3"));
-                    network.UpdateNetwork();
-                    break;
-                case 1:
-                    spriteRender.Sprite = (ImageManager.Get("3"));
-                    network.UpdateNetwork();
-                    break;
-                case 2:
-                    spriteRender.Sprite = (ImageManager.Get("2"));
-                    network.UpdateNetwork();
-                    break;
-                case 3:
-                    spriteRender.Sprite = (ImageManager.Get("1"));
-                    network.UpdateNetwork();
-                    break;
-                default:
-                    spriteRender.Sprite = (ImageManager.Get("Blank"));
-                    network.UpdateNetwork();
-                    StopClock();
-                    break;
-            }
-        }
-
-        public void StopClock()
-        {
-            OnEndClock.Invoke(totalTime);
-            isRunning = false;
-            totalTime = 0;
-            time = 0;
-        }
-
-        public void StartClock()
-        {
-            isRunning = true;
         }
     }
 }

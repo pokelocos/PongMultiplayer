@@ -6,7 +6,7 @@ namespace MyEngine
     [System.Serializable]
     public abstract class Behaviour
     {
-        protected GameObject gameObject;
+        [NonSerialized] protected GameObject gameObject;
         public GameObject GameObject { get { return gameObject; } }
 
         protected bool active;

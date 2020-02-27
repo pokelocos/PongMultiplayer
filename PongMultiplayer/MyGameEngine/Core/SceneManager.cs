@@ -17,12 +17,14 @@ namespace MyEngine
 
         public static void LoadScene(Scene scene)
         {
+            InputManager.UnSuscribeFromScenes(engine.scenes);
             engine.scenes = new List<Scene>();
             engine.scenes.Add(scene);
         }
 
         public static void LoadScenes(Scene[] scenes)
         {
+            InputManager.UnSuscribeFromScenes(engine.scenes);
             engine.scenes = new List<Scene>();
             foreach (var scene in scenes)
                 engine.scenes.Add(scene);
@@ -53,6 +55,7 @@ namespace MyEngine
 
             if(toRemove != null)
             {
+                InputManager.UnSuscribeFromScene(toRemove);
                 engine.scenes.Remove(toRemove);
             }
             else

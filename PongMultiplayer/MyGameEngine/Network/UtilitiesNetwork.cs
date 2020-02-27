@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MyEngine
 {
-    public static class UtilitiesMultiplayer
+    public static class UtilitiesNetwork
     {
         public static object ByteArrayToObject(byte[] arrBytes)
         {

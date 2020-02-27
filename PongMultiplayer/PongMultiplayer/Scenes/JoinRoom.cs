@@ -11,25 +11,25 @@ namespace PongMultiplayer
     {
         public JoinRoom(string name, bool active = true) : base(name, active)
         {
-            InputFieldPrefab inputPort = new InputFieldPrefab("TextField_Port", ImageManager.Get("square"), FontManager.Get("MainFont"), new Vector2(100, 100), new Vector3(200, 200, 0));
+            InputFieldPrefab inputPort = new InputFieldPrefab("TextField_Port","TextField", FontManager.Get("MainFont"), new Vector2(240, 40), new Vector3(280, 100, 0));
             inputPort.textField.text = "";
             inputPort.textField.exampleText = "Port...";
             gameObjects.Add(inputPort);
 
-            InputFieldPrefab addresPort = new InputFieldPrefab("TextField_Addres", ImageManager.Get("square"), FontManager.Get("MainFont"), new Vector2(100, 100), new Vector3(200, 0, 0));
+            InputFieldPrefab addresPort = new InputFieldPrefab("TextField_Port","TextField", FontManager.Get("MainFont"), new Vector2(240, 40), new Vector3(280, 150, 0));
             addresPort.textField.text = "";
             addresPort.textField.exampleText = "Addres Ip...";
             gameObjects.Add(addresPort);
 
-            ButtonPrefab joinRoomButton = new ButtonPrefab("Button_CreateRoom", ImageManager.Get("square"), new Vector2(100, 100), new Vector3(200, 400, 0));
+            ButtonPrefab joinRoomButton = new ButtonPrefab("Button_CreateRoom","JoinRoom", new Vector2(240, 100), new Vector3(280, 250, 0));
             joinRoomButton.button.Action += () =>
             {
                 try
                 {
-                    MultiplayerManager.port = 8000;
-                    MultiplayerManager.ConectToServer();
+                    NetworkManager.port = 8000;
                     SceneManager.LoadScene(new GameScene("GameScene"));
-                    SceneManager.UnloadScene("CreateRoom");
+
+                    NetworkManager.ConectToServer();
                 }
                 catch
                 {
@@ -38,8 +38,8 @@ namespace PongMultiplayer
             };
             gameObjects.Add(joinRoomButton);
 
-            
-            ButtonPrefab backButton = new ButtonPrefab("Button_Back", ImageManager.Get("square"), new Vector2(100, 100), new Vector3(400, 400, 0));
+
+            ButtonPrefab backButton = new ButtonPrefab("Button_Back", "BackToMenu", new Vector2(200, 80), new Vector3(300, 360, 0));
             backButton.button.Action += () =>
             {
                 SceneManager.LoadScene(new MainMenu("MainMenu"));

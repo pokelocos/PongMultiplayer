@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MyEngine.InputManager;
 
 namespace MyEngine
 {
-    class Button : Behaviour , ISelectable
+    class Button : Behaviour, ISelectable
     {
-        public delegate void Event();
-
         private Vector2 box;
 
         public Button(GameObject gameObject, Vector2 box) : base(gameObject)
@@ -23,11 +22,11 @@ namespace MyEngine
         public override void Update()
         {
             base.Update();
-            Rectangle rect = new Rectangle((int)gameObject.Transform.Position.X, (int)gameObject.Transform.Position.Y, (int)box.X, (int)box.Y);
-            if (rect.Contains(Mouse.GetState().Position) && Mouse.GetState().LeftButton.Equals(ButtonState.Pressed))
-            {
-                Action.Invoke();
-            }
+            //Rectangle rect = new Rectangle((int)gameObject.Transform.Position.X, (int)gameObject.Transform.Position.Y, (int)box.X, (int)box.Y);
+            //if (rect.Contains(Mouse.GetState().Position) && Mouse.GetState().LeftButton.Equals(ButtonState.Pressed))
+            //{
+            //    Action.Invoke();
+            //}
         }
 
         public Rectangle GetRect()
@@ -36,5 +35,15 @@ namespace MyEngine
         }
 
         public Event Action;
+
+        public void OnClickDown()
+        {
+            Console.WriteLine("OnClickDown: " + gameObject.GetName());
+            Action.Invoke();
+        }
+
+        public void OnClickUp() { }
+        public void OnMouseEnter() { }
+        public void OnMouseOut() { }
     }
 }

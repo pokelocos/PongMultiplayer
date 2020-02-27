@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyEngine
+namespace MyEngine.Network.Behaviours
 {
     class TransformNetwork : BehaviourNetwork
     {
@@ -16,15 +16,17 @@ namespace MyEngine
         public TransformNetwork(GameObject gameObject,float gapTime,int networkID) : base(gameObject,gapTime,networkID)
         {
             this.target = gameObject.Transform;
-            MultiplayerManager.SuscribeNetworkBehaviour(this);
+            NetworkManager.SuscribeNetworkBehaviour(this);
         }
       
         public override void UpdateNetwork()
         {
-            DataNetwork dataNetwork = new DataNetwork(networkID,MultiplayerManager.clientID,target);
+            mutex.WaitOne();
+            DataNetwork dataNetwork = new DataNetwork(networkID,NetworkManager.clientID,target);
 
-            var msg = UtilitiesMultiplayer.ObjectToByteArray(dataNetwork); 
-            MultiplayerManager.Send(msg);
+            var msg = UtilitiesNetwork.ObjectToByteArray(dataNetwork); 
+            NetworkManager.Send(msg);
+            mutex.ReleaseMutex();
         }
 
         public override void ReciveData(DataNetwork data)
@@ -41,7 +43,9 @@ namespace MyEngine
                 return;
             }
 
+            mutex.WaitOne();
             target.Position = obj.Position;
+            mutex.ReleaseMutex();
         }
 
         

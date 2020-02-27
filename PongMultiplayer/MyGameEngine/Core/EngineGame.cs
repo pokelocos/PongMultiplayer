@@ -66,11 +66,13 @@ namespace MyEngine
             ImageManager.Register("1", Content.Load<Texture2D>("1"));
             ImageManager.Register("2", Content.Load<Texture2D>("2"));
             ImageManager.Register("3", Content.Load<Texture2D>("3"));
+            ImageManager.Register("Blank",Content.Load<Texture2D>("Blank"));
 
             ImageManager.Register("LifeEmpty", Content.Load<Texture2D>("LifeEmpty"));
             ImageManager.Register("LifeFull", Content.Load<Texture2D>("LifeFull"));
 
             ImageManager.Register("Waiting", Content.Load<Texture2D>("Waiting"));
+            ImageManager.Register("Title", Content.Load<Texture2D>("Title"));
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -135,7 +137,7 @@ namespace MyEngine
         {
             base.OnExiting(sender, args);
 
-            MultiplayerManager.Disconect();
+            NetworkManager.Disconect();
 
             foreach (Scene e in scenes)
             {

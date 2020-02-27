@@ -8,23 +8,27 @@ using System.Threading.Tasks;
 
 namespace MyEngine
 {
+    [System.Serializable]
     class SpriteRender : Behaviour , IDrawable
     {
-        private Texture2D sprite;
+        public string spriteName;
+        [NonSerialized] private Texture2D sprite;
         public Texture2D Sprite
         {
             get { return sprite; }
             set { sprite = value; }
         }
-        private Color color;
+
+        [NonSerialized] private Color color;
         private Vector2 size;
         private Vector2 offset;
         public Vector2 Offset { get { return offset; } set { offset = value; } }
 
-        public SpriteRender(GameObject gameObject, Texture2D texture, Vector2 size) : base(gameObject)
+        public SpriteRender(GameObject gameObject, string texture, Vector2 size) : base(gameObject)
         {
             this.name = "[SpriteRender]: " + gameObject.GetName();
-            this.sprite = texture;
+            this.spriteName = texture;
+            this.sprite = ImageManager.Get(texture);
             this.color = Color.White;
             this.size = size;
             this.offset = Vector2.Zero;

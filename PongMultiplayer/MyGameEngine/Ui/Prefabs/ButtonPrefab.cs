@@ -13,7 +13,7 @@ namespace MyEngine
         public Vector2 size;
         public Button button;
 
-        public ButtonPrefab(string name,Texture2D texture2D,Vector2 size,Vector3 position) : base(name)
+        public ButtonPrefab(string name,string texture2D,Vector2 size,Vector3 position) : base(name)
         {
             this.size = size;
 
