@@ -99,6 +99,7 @@ namespace MyEngine
 
             if(client.Connected)
             {
+                //Console.WriteLine("Client send: "+Encoding.Default.GetString(buffer));
                 client.Client.Send(buffer);
             }
             else
@@ -141,14 +142,14 @@ namespace MyEngine
 
             Console.WriteLine("End search client...");
 
-            reciveData = new Thread(ReciveData_Thread);
+            reciveData = new Thread(ReceiveData_Thread);
             reciveData.Start();
         }
 
         /// <summary>
         /// Recive data in async methond.
         /// </summary>
-        private static void ReciveData_Thread()
+        private static void ReceiveData_Thread()
         {
             byte[] buffer = new byte[1024];
 
@@ -160,9 +161,11 @@ namespace MyEngine
 
                     BinaryFormatter bf = new BinaryFormatter();
                     MemoryStream ms = new MemoryStream(buffer);
-                    DataNetwork data = (DataNetwork)bf.Deserialize(ms);
-                    
-                    if(data.id == -1)
+                    DataNetwork data = bf.Deserialize(ms) as DataNetwork;
+
+                    //Console.WriteLine("Client receive: "+Encoding.Default.GetString(buffer));
+
+                    if (data.id == -1)
                     {
                         Command(data);
                         continue;
@@ -204,7 +207,7 @@ namespace MyEngine
                     client.Client.Send(msg);
                    
                     //Inicio Nuevo thread para recivir informacion
-                    reciveData = new Thread(ReciveData_Thread);
+                    reciveData = new Thread(ReceiveData_Thread);
                     reciveData.Start();
 
                     //Llamo al evento de coneccion

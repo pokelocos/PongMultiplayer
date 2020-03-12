@@ -40,7 +40,7 @@ namespace PongMultiplayer
             background.AddBehaviour(new SpriteRender(background, "Background", new Vector2(800, 480)));
             this.gameObjects.Add(background);
 
-            //this.gameObjects.Add(new MultiplayerShowData("ShowData"));
+            this.gameObjects.Add(new MultiplayerShowData("ShowData"));
 
             //Ball
             ball = new Ball("Ball", 0, 10, 0, 10, "circle", new Vector2(40, 40));
@@ -69,8 +69,11 @@ namespace PongMultiplayer
             this.gameObjects.Add(wallBot);
 
             //Trigger goal
-            TriggerGoal trigerL = new TriggerGoal("TriggerL", () => { GoalBall(-1); ResetBall(new Vector3(1, 0, 0)); });
-            TriggerGoal trigerR = new TriggerGoal("TriggerR", () => { GoalBall(1); ResetBall(new Vector3(-1, 0, 0)); });
+            if (NetworkManager.isServer)
+            {
+                TriggerGoal trigerL = new TriggerGoal("TriggerL", () => { GoalBall(-1); ball.Reset(new Vector3(1, 0, 0)); });
+                TriggerGoal trigerR = new TriggerGoal("TriggerR", () => { GoalBall(1); ball.Reset(new Vector3(-1, 0, 0)); });
+            }
 
             //Waiting Text
             waitingOponent = new GameObject("Waiting");
@@ -119,22 +122,29 @@ namespace PongMultiplayer
             {
                 controller = new Controller(paddleL, 200);
                 //controller.SetActive(false);
-                paddleL.GetComponent<TransformNetwork>().controllerID = NetworkManager.clientID;
+                paddleL.transformNetwork.controllerID = NetworkManager.clientID;
                 paddleL.AddBehaviour(controller);
 
                 ball.GetComponent<TransformNetwork>().controllerID = NetworkManager.clientID;
 
                 clock.GetComponent<SpriteRenderNetwork>().controllerID = NetworkManager.clientID;
+                /*
                 clock.GetComponent<Animator>().Events[0].Keys.Add( new Tuple<Action, float>(() => {
-                        ResetBall(Vector3.Normalize(new Vector3(random.Next()-int.MaxValue/2f, random.Next() - int.MaxValue / 2f, 0)));
+                        ball.Reset(Vector3.Normalize(new Vector3(random.Next()-int.MaxValue/2f, random.Next() - int.MaxValue / 2f, 0)));
                     },3f));
-                
+
+                */
+                clock.actions = () => {
+                    ball.Reset(Vector3.Normalize(new Vector3(random.Next() - int.MaxValue / 2f, random.Next() - int.MaxValue / 2f, 0)));
+                };
+
             }
             else            
             {
                 controller = new Controller(paddleR, 200);
                 //controller.SetActive(false);
-                paddleR.GetComponent<TransformNetwork>().controllerID = NetworkManager.clientID;
+                //paddleR.transformNetwork.controllerID = NetworkManager.clientID;
+                paddleR.transformNetwork.controllerID = 1; // segun yo en este punto "clientID" ya deberia estar bien asignada pero es = 0 asi que lo asigno a la mala nomas :C
                 paddleR.AddBehaviour(controller);
 
                 //clock.GetComponent<Animator>().SetActive(false);
@@ -143,12 +153,7 @@ namespace PongMultiplayer
     
         }
 
-        private void ResetBall(Vector3 direction)
-        {
-            ball.Transform.Position = new Vector3((Globals.widthScreen / 2f) - 20, 240 - 20, 0);
-            ball.direction = direction;
-            ball.speed = 80;
-        }
+       
 
         public override void Actualize()
         {

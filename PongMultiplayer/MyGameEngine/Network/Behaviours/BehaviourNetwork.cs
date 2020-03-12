@@ -28,6 +28,7 @@ namespace MyEngine.Network.Behaviours
         public override void Update()
         {
             base.Update();
+           // Console.WriteLine("Behaviour (" + this.gameObject.GetName() + "): " + NetworkManager.Client + ", " + controllerID + " == " + NetworkManager.clientID);
             if (isUpdatable && NetworkManager.Client != null && NetworkManager.Client.Connected && controllerID == NetworkManager.clientID)
             {
                 if (gapMS / 1000f < currentTime)

@@ -22,6 +22,11 @@ namespace MyEngine
         public EngineGame()
         {
             graphics = new GraphicsDeviceManager(this);
+
+            graphics.PreferredBackBufferWidth = Globals.widthScreen;  
+            graphics.PreferredBackBufferHeight = Globals.heightScreen;  
+            graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
             scenes = new List<Scene>();
 
@@ -117,17 +122,30 @@ namespace MyEngine
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.Clear(Globals.color);
             spriteBatch.Begin();
+
+            // Draw common game elements
             foreach (Scene e in scenes)
             {
-                if(e.IsActive())
+                if (e.IsActive())
                 {
                     e.Draw(spriteBatch);
                 }
             }
-            
+
+            // Draw relevant elements in debug mode
+            if (Globals.DebugMode)
+            { 
+                foreach (Scene e in scenes)
+                {
+                    if (e.IsActive())
+                    {
+                        e.DrawDebug(spriteBatch);
+                    }
+                }
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);

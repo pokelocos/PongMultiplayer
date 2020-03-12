@@ -107,6 +107,17 @@ namespace MyEngine
             }
         }
 
+        public virtual void DrawDebug(SpriteBatch sb)
+        {
+            foreach (Behaviour b in behaviours)
+            {
+                if (b.IsActive())
+                {
+                    b.DrawDebug(sb);
+                }
+            }
+        }
+
         public bool IsActive()
         {
             return active;

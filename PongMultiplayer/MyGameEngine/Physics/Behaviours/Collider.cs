@@ -56,7 +56,7 @@ namespace MyEngine
 
         public abstract void IsCollider(Collider collider);
 
-        public abstract void Draw(SpriteBatch sb);
+        public virtual void Draw(SpriteBatch sb) { }
 
         public class Rect : Collider 
         {

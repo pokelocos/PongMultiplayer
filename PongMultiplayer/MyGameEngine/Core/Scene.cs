@@ -64,6 +64,17 @@ namespace MyEngine
             }
         }
 
+        public void DrawDebug(SpriteBatch sb)
+        {
+            foreach (GameObject go in gameObjects)
+            {
+                if (go.IsActive())
+                {
+                    go.DrawDebug(sb);
+                }
+            }
+        }
+
         public bool IsActive()
         {
             return active;

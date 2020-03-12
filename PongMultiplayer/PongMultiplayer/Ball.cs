@@ -54,5 +54,13 @@ namespace PongMultiplayer
             this.direction = Vector3.Normalize(dir);
         }
 
+        public void Reset(Vector3 direction)
+        {
+            Transform.Position = new Vector3((Globals.widthScreen / 2f) - 20, 240 - 20, 0);
+            this.direction = direction;
+            speed = 80;
+        }
+
+
     }
 }

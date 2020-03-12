@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace MyEngine
@@ -56,7 +57,8 @@ namespace MyEngine
             this.active = active;
         }
 
-        
+        public virtual void DrawDebug(SpriteBatch sb) { }
+
     }
 
     
