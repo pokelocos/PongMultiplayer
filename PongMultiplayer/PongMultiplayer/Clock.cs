@@ -13,7 +13,7 @@ namespace PongMultiplayer
     {
         public Vector2 size;
 
-        public Action actions;
+        public Action OnEndOfCount;
 
         public Clock(string name, Vector2 size, int networkID) : base(name)
         {
@@ -40,7 +40,7 @@ namespace PongMultiplayer
                 events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); }, 0f));
                 events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); }, 1f));
                 events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); }, 2f));
-                events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); actions?.Invoke(); }, 3f));
+                events.Add(new Tuple<Action, float>(() => { network.UpdateNetwork(); OnEndOfCount?.Invoke(); }, 3f));
                 var actionKeys = new TimeLine<Action>(events, 4f);
                 animator.Events.Add(actionKeys);
 

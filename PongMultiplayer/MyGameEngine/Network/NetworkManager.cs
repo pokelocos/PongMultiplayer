@@ -16,7 +16,7 @@ namespace MyEngine
 {
     public static class NetworkManager
     {
-        public static IPAddress addres;
+        public static IPAddress address;
         public static int port;
         public static bool isServer = false;
         public static int clientID = -1;
@@ -29,6 +29,8 @@ namespace MyEngine
         public static ConectionEvent OnConnect;
         public static ConectionEvent OnClientAmountChange;
         public static ConectionEvent OnDiscconect;
+
+        public static ConectionEvent OnErrorToTryConect;
 
         private static TcpListener listener;
         private static Thread searchClient;
@@ -63,12 +65,23 @@ namespace MyEngine
                     if (isServer)
                     {
                         ClientAmount--;
-                        var msg = UtilitiesNetwork.ObjectToByteArray(new DataNetwork(-1, ClientAmount, BasicCommand.ServerDesconection));
+                        var msg = UtilitiesNetwork.ObjectToByteArray(new DataNetwork(-1, ClientAmount, BasicCommand.Desconection));
                         Send(msg);
                     }
                     else
                     {
                         ClientAmount = data.senderID;
+
+                    }
+                    break;
+
+                case BasicCommand.ServerDesconection:
+                    if (isServer)
+                    {
+                    }
+                    else
+                    {
+                        Disconect();
                     }
                     break;
 
@@ -130,9 +143,9 @@ namespace MyEngine
         {
             Console.WriteLine("Start search client...");
             //addres = IPAddress.Any;
-            addres = UtilitiesNetwork.GetIPs()[0];
+            address = UtilitiesNetwork.GetIPs()[0];
            
-            listener = new TcpListener(addres, NetworkManager.port);
+            listener = new TcpListener(address, NetworkManager.port);
             listener.Start();
             try
             {
@@ -192,32 +205,49 @@ namespace MyEngine
         public static void ConectToServer()
         {
             client = new TcpClient();
-            addres = UtilitiesNetwork.GetIPs()[0];
-            IPEndPoint IP_End = new IPEndPoint(addres, port);
+            if(Globals.DebugNetWorkMode) NetworkManager.address = UtilitiesNetwork.GetIPs()[0]; // de codigo cancer
+            IPEndPoint IP_End = new IPEndPoint(address, port);
 
-            try
+            float ticksTry = 0;
+            while (true)
             {
-                client.Connect(IP_End);
-
-                if (client.Connected)
+                try
                 {
-                    //Envio mensaje de coneccion
-                    var msg = UtilitiesNetwork.ObjectToByteArray(new DataNetwork(-1, 0, BasicCommand.NewConnection));
-                    Console.WriteLine("[Send message]: conect to server.");
-                    client.Client.Send(msg);
-                   
-                    //Inicio Nuevo thread para recivir informacion
-                    reciveData = new Thread(ReceiveData_Thread);
-                    reciveData.Start();
+                    client.Connect(IP_End);
 
-                    //Llamo al evento de coneccion
-                    OnConnect?.Invoke();
+                    if (client.Connected)
+                    {
+                        //Envio mensaje de coneccion
+                        var msg = UtilitiesNetwork.ObjectToByteArray(new DataNetwork(-1, 0, BasicCommand.NewConnection));
+                        Console.WriteLine("[Send message]: conect to server.");
+                        client.Client.Send(msg);
+
+                        //Inicio Nuevo thread para recivir informacion
+                        reciveData = new Thread(ReceiveData_Thread);
+                        reciveData.Start();
+
+                        //Llamo al evento de coneccion
+                        OnConnect?.Invoke();
+                        return;
+                    }
+                    
                 }
+                catch
+                {
+                    Console.WriteLine("Intentado conectar al servidor...");
+                    //Console.WriteLine("ConectToServer() CatchExeption");
+                }
+
+                if (ticksTry > 5)
+                {
+                    Console.WriteLine("Error, servidor no encontrado...");
+                    OnErrorToTryConect?.Invoke();
+                    return;
+                }
+                ticksTry += Time.CurrentTime();
             }
-            catch 
-            {
-                Console.WriteLine("ConectToServer() CatchExeption");
-            }
+
+            
         }
 
         public static void Disconect()
@@ -232,13 +262,20 @@ namespace MyEngine
             reciveData?.Abort();
 
             //Reinicio todos los valores al base
-            addres = null;
+            address = null;
             port = -1;
             isServer = false;
             clientID = -1;
 
-            //ClientAmount = 0;
-            clientAmount = 0;
+            listener = null;
+            searchClient = null;
+            reciveData  = null;
+
+            client = null;
+         
+
+        //ClientAmount = 0;
+        clientAmount = 0;
 
             //Llamo al evento de desconeccion
             OnDiscconect?.Invoke();

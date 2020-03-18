@@ -13,6 +13,7 @@ namespace MyEngine
         public static int heightScreen = 480;
 
         public static bool DebugMode = false;
+        public static bool DebugNetWorkMode = true;
         public static Color color = Color.DarkSeaGreen;
 
     }

@@ -40,6 +40,10 @@ namespace MyEngine
         public virtual void EnterCollision(Collider other) { }
         public virtual void ExitCollision(Collider other) { }
 
+        public virtual void StayTrigger(Collider other) { }
+        public virtual void EnterTrigger(Collider other) { }
+        public virtual void ExitTrigger(Collider other) { }
+
         public void AddBehaviour(Behaviour behaviour)
         {
             behaviours.Add(behaviour);

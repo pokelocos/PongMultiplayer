@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,16 +28,29 @@ namespace PongMultiplayer
             {
                 try
                 {
-                    NetworkManager.StartServer(8000);
-                    //MultiplayerManager.StartServer(Int16.Parse(inputPort.textField.text));
+                    if (Globals.DebugNetWorkMode)
+                    {
+                        NetworkManager.StartServer(8000);
+                    }
+                    else
+                    {
+                        var portNum = Int16.Parse( inputPort.textField.text);
+                        NetworkManager.StartServer(portNum);
+                    }
+
+                    SceneManager.LoadScene(new GameScene("GameScene"));
                 }
                 catch
                 {
-                    Console.WriteLine("Invalid port Number: " + 8000);
-                    //Console.WriteLine("Invalid port Number: " + Int16.Parse(inputPort.textField.text));
+                    if (Globals.DebugMode)
+                    {
+                        Console.WriteLine("Invalid port Number: " + 8000);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid port Number.");
+                    }
                 }
-
-                SceneManager.LoadScene(new GameScene("GameScene"));
             };
             gameObjects.Add(createRoomButton);
 

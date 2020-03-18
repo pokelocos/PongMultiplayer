@@ -21,8 +21,6 @@ namespace MyEngine.Network.Behaviours
             mutex.WaitOne();
             DataNetwork dataNetwork = new DataNetwork(networkID, NetworkManager.clientID, target);
 
-            Console.WriteLine("ID: " + networkID + " ,clientID: " + NetworkManager.clientID + " ,target: " + target);
-
             var msg = UtilitiesNetwork.ObjectToByteArray(dataNetwork);
             NetworkManager.Send(msg);
             mutex.ReleaseMutex();
@@ -40,8 +38,6 @@ namespace MyEngine.Network.Behaviours
                 Console.WriteLine("Obj null");
                 return;
             }
-
-            Console.WriteLine("Recive data: Sprite network: "+ obj);
 
             mutex.WaitOne();
             //target.Sprite = obj.Sprite;

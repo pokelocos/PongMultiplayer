@@ -16,7 +16,7 @@ namespace PongMultiplayer
         public Paddle(string name, int idNetwork, float gapMS,string texture,Vector2 size) : base(name)
         {
             AddBehaviour(new SpriteRender(this, texture, size));
-            AddBehaviour(new Collider.Rect(this, size / 2f, size));
+            AddBehaviour(new Collider.Rect(this,Vector2.Zero, size,false));
             transformNetwork = new TransformNetwork(this, gapMS, idNetwork);
             AddBehaviour(transformNetwork);
         }

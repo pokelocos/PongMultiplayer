@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,10 +27,24 @@ namespace PongMultiplayer
             {
                 try
                 {
-                    NetworkManager.port = 8000;
+                    if(Globals.DebugNetWorkMode)
+                    {
+                        NetworkManager.port = 8000;
+                        NetworkManager.address = UtilitiesNetwork.GetIPs()[0];
+                    }
+                    else
+                    {
+                        NetworkManager.port = 8000;
+                        var address = addresPort.textField.text;
+                        NetworkManager.address = IPAddress.Parse(address);
+                    }
                     SceneManager.LoadScene(new GameScene("GameScene"));
-
+                    NetworkManager.OnErrorToTryConect = () => 
+                    {
+                        SceneManager.LoadScene(new MainMenu("MainMenu"));
+                    };
                     NetworkManager.ConectToServer();
+
                 }
                 catch
                 {

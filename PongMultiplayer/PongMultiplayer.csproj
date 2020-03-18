@@ -92,6 +92,7 @@
     <Compile Include="MyGameEngine\Utilities\ModelManager.cs" />
     <Compile Include="MyGameEngine\Utilities\Time.cs" />
     <Compile Include="PongMultiplayer\Scenes\OtherMatch.cs" />
+    <Compile Include="PongMultiplayer\GameDataBheaviour.cs" />
     <Compile Include="PongMultiplayer\TriggerGoal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -79,6 +79,12 @@ namespace MyEngine
             ImageManager.Register("Waiting", Content.Load<Texture2D>("Waiting"));
             ImageManager.Register("Title", Content.Load<Texture2D>("Title"));
 
+            ImageManager.Register("YouWin", Content.Load<Texture2D>("YouWin"));
+            ImageManager.Register("YouLose", Content.Load<Texture2D>("YouLose"));
+            ImageManager.Register("Back2", Content.Load<Texture2D>("Back2"));
+            ImageManager.Register("Retry", Content.Load<Texture2D>("Retry"));
+
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             scenes.Add(new MainMenu("MainMenu",true));

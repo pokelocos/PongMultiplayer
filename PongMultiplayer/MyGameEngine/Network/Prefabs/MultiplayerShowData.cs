@@ -30,7 +30,7 @@ namespace MyEngine
             texts[0].value = "Is connected: " + NetworkManager.Client?.Connected;
             texts[1].value = "Is server: " + NetworkManager.isServer;
             texts[2].value = "Client amount: " + NetworkManager.ClientAmount;
-            texts[3].value = "Addres: "+ NetworkManager.addres?.ToString();
+            texts[3].value = "Addres: "+ NetworkManager.address?.ToString();
             texts[4].value = "Port: " + NetworkManager.port.ToString();
             texts[5].value = "Client: " + NetworkManager.Client?.ToString();
             texts[6].value = "ClientID: " + NetworkManager.clientID;

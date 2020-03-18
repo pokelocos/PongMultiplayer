@@ -7,15 +7,18 @@ namespace MyEngine
 {
     public abstract class Collider : Behaviour , IDrawable
     {
+        public bool isTrigger;
+
         private Vector2 offset;
         private Vector2 position;
 
         private List<Collider> colliders = new List<Collider>();
 
-        public Collider(GameObject gameObject, Vector2 offset, Vector2 position) : base(gameObject)
+        public Collider(GameObject gameObject, Vector2 offset, Vector2 position,bool isTrigger) : base(gameObject)
         {
             this.offset = offset;
             this.position = position;
+            this.isTrigger = isTrigger;
         }
 
         public override void Start()
@@ -28,27 +31,71 @@ namespace MyEngine
             if (exist && !colliders.Contains(c))
             {
                 colliders.Add(c);
-                this.gameObject.EnterCollision(c);
+
+                if (isTrigger)
+                {
+                    this.gameObject.EnterTrigger(c);
+                }
+                else
+                {
+                    this.gameObject.EnterCollision(c);
+                }
                 foreach (Behaviour b in this.gameObject.Behaviours)
                 {
-                    b.EnterCollision(c);
+                    if (isTrigger)
+                    {
+                       b.EnterTrigger(c);
+                    }
+                    else
+                    {
+                        b.EnterCollision(c);
+                    }
                 }
             }
             if(exist && colliders.Contains(c))
             {
-                this.gameObject.StayCollision(c);
+                if (isTrigger)
+                {
+                    this.gameObject.StayCollision(c);
+                }
+                else
+                {
+                    this.gameObject.StayCollision(c);
+                }
                 foreach (Behaviour b in this.gameObject.Behaviours)
                 {
-                    b.StayCollision(c);
+                    if (isTrigger)
+                    {
+                       b.StayCollision(c);
+                    }
+                    else
+                    {
+                        b.StayCollision(c);
+                    }
                 }
             }
             if(!exist && colliders.Contains(c))
             {
                 colliders.Remove(c);
-                this.gameObject.ExitCollision(c);
+
+                if (isTrigger)
+                {
+                    this.gameObject.ExitTrigger(c);
+                }
+                else
+                {
+                    this.gameObject.ExitCollision(c);
+                }
                 foreach (Behaviour b in this.gameObject.Behaviours)
                 {
-                    b.ExitCollision(c);
+                    if (isTrigger)
+                    {
+                        b.ExitTrigger(c);
+                    }
+                    else
+                    {
+                        b.ExitCollision(c);
+                    }
                 }
             }
             
@@ -62,8 +109,8 @@ namespace MyEngine
         {
             private Vector2 size;
             
-            public Rect(GameObject gameObject, Vector2 offset,Vector2 size) :
-                base(gameObject, offset, new Vector2(gameObject.Transform.Position.X, gameObject.Transform.Position.Y))
+            public Rect(GameObject gameObject, Vector2 offset,Vector2 size, bool isTrigger) :
+                base(gameObject, offset, new Vector2(gameObject.Transform.Position.X, gameObject.Transform.Position.Y), isTrigger)
             {
                 this.size = size;
                 this.name = "[Rect Collider]: " + gameObject.GetName();
@@ -120,8 +167,8 @@ namespace MyEngine
         {
             private double radius;           
 
-            public Circle(GameObject gameObject, Vector2 offset, double radius) :
-                base(gameObject,offset, new Vector2(gameObject.Transform.Position.X, gameObject.Transform.Position.Y))
+            public Circle(GameObject gameObject, Vector2 offset, double radius, bool isTrigger) :
+                base(gameObject,offset, new Vector2(gameObject.Transform.Position.X, gameObject.Transform.Position.Y), isTrigger)
             {
                 this.radius = radius;
                 this.name = "[Circle Collider]: " + gameObject.GetName();
@@ -136,7 +183,6 @@ namespace MyEngine
                     sb.Draw(ImageManager.textures["circle"], new Rectangle(x, y, (int)radius*2, (int)radius*2), new Color(255, 255, 255, 0));
                 }
             }
-
 
             public override void IsCollider(Collider other)
             {

@@ -16,7 +16,6 @@ namespace MyEngine
 
         public static void Check(Collider collider)
         {
-            
             foreach (Collider c in Physics.colliders)
             {
                 if (collider != c)

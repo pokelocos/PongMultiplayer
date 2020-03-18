@@ -14,18 +14,18 @@ namespace PongMultiplayer
 
         SpriteRender spriteRender;
 
+        public BehaviourNetwork network; 
+
         public lifeSlot(string name, Vector3 position,int networkID) : base(name)
         {
             spriteRender = new SpriteRender(this, "LifeEmpty", new Vector2(60, 40));
             transform.Position = position;
             AddBehaviour(spriteRender);
 
-            if (NetworkManager.isServer)
-            {
-                var network = new SpriteRenderNetwork(this, 100, networkID);
-                network.isUpdatable = false;
-                AddBehaviour(network);
-            }
+            network = new SpriteRenderNetwork(this, 100, networkID);
+            network.isUpdatable = false;
+            AddBehaviour(network);
+
         }
 
         public void SetLife(bool i)

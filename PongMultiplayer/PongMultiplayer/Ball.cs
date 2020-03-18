@@ -21,7 +21,7 @@ namespace PongMultiplayer
             AddBehaviour(new TransformNetwork(this, gapMS, idNetwork));
 
             if(NetworkManager.isServer)
-                AddBehaviour(new Collider.Rect(this, size / 2f, size));
+                AddBehaviour(new Collider.Rect(this,Vector2.Zero, size,false));
 
             this.speed = speed;
             this.aceleration = acceleration;
@@ -46,6 +46,11 @@ namespace PongMultiplayer
                 return;
             }
 
+            if(other.isTrigger) // esto es un parche por que no quiero tocar "Physics" en estos momentos :C
+            {
+                return;
+            }
+
             var otherCenter = other.GameObject.Transform.Position;
             var myCenter = this.transform.Position;
             var dir = Vector3.Normalize(myCenter - otherCenter) + Vector3.Normalize(new Vector3(-direction.X, direction.Y, 0));
@@ -58,7 +63,7 @@ namespace PongMultiplayer
         {
             Transform.Position = new Vector3((Globals.widthScreen / 2f) - 20, 240 - 20, 0);
             this.direction = direction;
-            speed = 80;
+            speed = 200;
         }
 
 

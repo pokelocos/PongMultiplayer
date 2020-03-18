@@ -17,9 +17,6 @@ namespace PongMultiplayer
 
     class GameScene : Scene
     {
-        
-        private float score = 0;
-
         private GameObject waitingOponent;
         private Clock clock;
         private Ball ball;
@@ -27,6 +24,8 @@ namespace PongMultiplayer
         private Controller controller;
         private List<lifeSlot> lifeSlotsL;
         private List<lifeSlot> lifeSlotsR;
+
+        private GameDataBheaviour GDB;
 
 
         private Random random;
@@ -40,10 +39,11 @@ namespace PongMultiplayer
             background.AddBehaviour(new SpriteRender(background, "Background", new Vector2(800, 480)));
             this.gameObjects.Add(background);
 
-            this.gameObjects.Add(new MultiplayerShowData("ShowData"));
+            if(Globals.DebugNetWorkMode)
+                this.gameObjects.Add(new MultiplayerShowData("ShowData"));
 
             //Ball
-            ball = new Ball("Ball", 0, 10, 0, 10, "circle", new Vector2(40, 40));
+            ball = new Ball("Ball", 0, 10, 0, 0, "circle", new Vector2(40, 40));
             ball.Transform.Position = new Vector3((Globals.widthScreen / 2f) - 20, 240 - 20, 0);
             this.gameObjects.Add(ball);
 
@@ -59,20 +59,29 @@ namespace PongMultiplayer
 
             //Collider Top
             GameObject wallTop = new GameObject("Top");
-            wallTop.AddBehaviour(new Collider.Rect(wallTop, new Vector2(0, -10), new Vector2(800, 10)));
+            wallTop.AddBehaviour(new Collider.Rect(wallTop, new Vector2(0, -30), new Vector2(800, 30),false));
             this.gameObjects.Add(wallTop);
 
             //Collider Bot
             GameObject wallBot = new GameObject("Bot");
             wallBot.Transform.Position = new Vector3(0, 480, 0);
-            wallBot.AddBehaviour(new Collider.Rect(wallBot, new Vector2(0, 10), new Vector2(800, 10)));
+            wallBot.AddBehaviour(new Collider.Rect(wallBot, new Vector2(0, 0), new Vector2(800, 30),false));
             this.gameObjects.Add(wallBot);
 
             //Trigger goal
             if (NetworkManager.isServer)
             {
-                TriggerGoal trigerL = new TriggerGoal("TriggerL", () => { GoalBall(-1); ball.Reset(new Vector3(1, 0, 0)); });
-                TriggerGoal trigerR = new TriggerGoal("TriggerR", () => { GoalBall(1); ball.Reset(new Vector3(-1, 0, 0)); });
+                TriggerGoal trigerL = new TriggerGoal("TriggerL", () => {
+                    GDB.GoalBall(-1); ball.Reset(new Vector3(1, 0, 0));
+                });
+                trigerL.Transform.Position = new Vector3(-50, 0, 0);
+                this.gameObjects.Add(trigerL);
+
+                TriggerGoal trigerR = new TriggerGoal("TriggerR", () => {
+                    GDB.GoalBall(1); ball.Reset(new Vector3(-1, 0, 0));
+                });
+                trigerR.Transform.Position = new Vector3(Globals.widthScreen,0,0);
+                this.gameObjects.Add(trigerR);
             }
 
             //Waiting Text
@@ -80,7 +89,6 @@ namespace PongMultiplayer
             waitingOponent.AddBehaviour(new SpriteRender(waitingOponent,"Waiting",new Vector2(500,100)));
             waitingOponent.Transform.Position = new Vector3(150,300,0);
             this.gameObjects.Add(waitingOponent);
-
 
             //Clock Text
             clock = new Clock("Clock",new Vector2(100,100),3);
@@ -92,7 +100,7 @@ namespace PongMultiplayer
             lifeSlotsL = new List<lifeSlot>();
             for (int i = 0; i < 3; i++)
             {
-                var slot = new lifeSlot("lifeSlotL_" + i, new Vector3(320 - (i * 60), 20, 0), 4+i);
+                var slot = new lifeSlot("lifeSlotL_" + i, new Vector3( (Globals.widthScreen/2) -80 - (i * 60), 20, 0), 4+i);
                 lifeSlotsL.Add(slot);
                 gameObjects.Add(slot);
             }
@@ -100,11 +108,15 @@ namespace PongMultiplayer
             lifeSlotsR = new List<lifeSlot>();
             for (int i = 0; i < 3; i++)
             {
-                var slot = new lifeSlot("lifeSlotR_" + i, new Vector3(420 + (i * 60), 20, 0), 7+i);
+                var slot = new lifeSlot("lifeSlotR_" + i, new Vector3((Globals.widthScreen / 2) + 20 + (i * 60), 20, 0), 7+i);
                 lifeSlotsR.Add(slot);
                 gameObjects.Add(slot);
             }
 
+            var GDBObject = new GameObject("GameData");
+            GDB = new GameDataBheaviour(GDBObject,-1,10,lifeSlotsL,lifeSlotsR);
+            GDBObject.AddBehaviour(GDB);
+            this.gameObjects.Add(GDBObject);
 
 
             if (NetworkManager.Client == null)
@@ -113,7 +125,7 @@ namespace PongMultiplayer
             }
             else
             {
-                //StartGame();
+                StartGame();
             }
 
 
@@ -128,13 +140,8 @@ namespace PongMultiplayer
                 ball.GetComponent<TransformNetwork>().controllerID = NetworkManager.clientID;
 
                 clock.GetComponent<SpriteRenderNetwork>().controllerID = NetworkManager.clientID;
-                /*
-                clock.GetComponent<Animator>().Events[0].Keys.Add( new Tuple<Action, float>(() => {
-                        ball.Reset(Vector3.Normalize(new Vector3(random.Next()-int.MaxValue/2f, random.Next() - int.MaxValue / 2f, 0)));
-                    },3f));
-
-                */
-                clock.actions = () => {
+         
+                clock.OnEndOfCount = () => {
                     ball.Reset(Vector3.Normalize(new Vector3(random.Next() - int.MaxValue / 2f, random.Next() - int.MaxValue / 2f, 0)));
                 };
 
@@ -147,7 +154,6 @@ namespace PongMultiplayer
                 paddleR.transformNetwork.controllerID = 1; // segun yo en este punto "clientID" ya deberia estar bien asignada pero es = 0 asi que lo asigno a la mala nomas :C
                 paddleR.AddBehaviour(controller);
 
-                //clock.GetComponent<Animator>().SetActive(false);
             }
 
     
@@ -158,7 +164,19 @@ namespace PongMultiplayer
         public override void Actualize()
         {
             base.Actualize();
-           
+
+           // Console.WriteLine("score: " + GDB.score);
+            if (-GDB.score > lifeSlotsL.Count)
+            {
+                var v = NetworkManager.isServer ? true : false;
+                SceneManager.LoadScene(new OtherMatch("OtherMatch", v));
+            }
+            else if (GDB.score > lifeSlotsR.Count)
+            {
+                var v = NetworkManager.isServer ? false : true;
+                SceneManager.LoadScene(new OtherMatch("OtherMatch", v));
+            }
+
         }
 
         public void StartGame()
@@ -170,46 +188,6 @@ namespace PongMultiplayer
 
         
 
-        public void GoalBall(int n)
-        {
-            score += n;
-
-            if (score < 0)
-            {
-                for (int i = 0; i < lifeSlotsL.Count; i++)
-                {
-                    lifeSlotsL[i].SetLife(n < i);
-                }
-            }
-            else if (score > 0)
-            {
-                for (int i = 0; i < lifeSlotsR.Count; i++)
-                {
-                    lifeSlotsR[i].SetLife(n < i);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < lifeSlotsL.Count; i++)
-                {
-                    lifeSlotsL[i].SetLife(false);
-                }
-                for (int i = 0; i < lifeSlotsR.Count; i++)
-                {
-                    lifeSlotsR[i].SetLife(false);
-                }
-            }
-
-            if (score <= -lifeSlotsL.Count)
-            {
-                SceneManager.LoadSyncScene(new OtherMatch("Other Match"));
-            }
-
-            if (score >= lifeSlotsR.Count)
-            {
-                SceneManager.LoadSyncScene(new OtherMatch("Other Match"));
-            }
-
-        }
+      
     }
 }
